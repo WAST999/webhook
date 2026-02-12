@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Awaa Webhook</title>
+    <style>
+        body { background-color: #000; color: #ff8c00; font-family: sans-serif; padding: 20px; }
+        input, textarea { 
+            width: 100%; padding: 10px; margin: 10px 0; 
+            background: #1a1a1a; border: 1px solid #ff8c00; 
+            color: #ff8c00; border-radius: 4px; 
+        }
+        button { 
+            width: 100%; padding: 12px; background: #ff8c00; 
+            color: #000; border: none; font-weight: bold; cursor: pointer; 
+        }
+        button:active { background: #e67e00; }
+        .status { margin-top: 15px; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <h2>Awaaa Webhook</h2>
+    <input type="text" id="url" placeholder="URL Webhook (https://...)">
+    <textarea id="message" rows="15" placeholder="Pesan yang ingin dikirim..."></textarea>
+    <button onclick="sendWebhook()">KIRIM PESAN</button>
+    <div id="status" class="status"></div>
+
+    <script>
+        async function sendWebhook() {
+            const url = document.getElementById('url').value;
+            const message = document.getElementById('message').value;
+            const statusDiv = document.getElementById('status');
+
+            statusDiv.innerText = "Mengirim...";
+            
+            try {
+                const response = await fetch('/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url, message })
+                });
+                const result = await response.json();
+                statusDiv.innerText = result.success ? "Berhasil dikirim!" : "Gagal: " + result.error;
+            } catch (err) {
+                statusDiv.innerText = "Error: " + err.message;
+            }
+        }
+    </script>
+</body>
+</html>
